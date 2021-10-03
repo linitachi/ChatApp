@@ -9,23 +9,25 @@ open Giraffe
 
 let endpoints = choose []
 
-type Message = { userName: string
-                 content: string }
+type Message = { userName: string; content: string }
 
 type MyHub() =
     inherit Hub()
-    member __.PostMessage(message: Message): unit =
-        __.Clients.All.SendAsync("receiveMessage", message) |> ignore
 
-let configureApp (app: IApplicationBuilder): unit =
-    app.UseDefaultFiles()
-       .UseStaticFiles()
-       .UseSignalR(fun routes -> routes.MapHub<MyHub>(PathString "/myhub"))
-       .UseGiraffe endpoints
+    member __.PostMessage(message: Message) : unit =
+        __.Clients.All.SendAsync("receiveMessage", message)
+        |> ignore
 
-let configureServices (services: IServiceCollection): unit =
-    services.AddGiraffe()
-            .AddSignalR() |> ignore
+let configureApp (app: IApplicationBuilder) =
+    app
+        .UseDefaultFiles()
+        .UseStaticFiles()
+        .UseRouting()
+        .UseEndpoints(fun endpoints -> endpoints.MapHub<MyHub>("/myhub") |> ignore)
+        .UseGiraffe endpoints
+
+let configureServices (services: IServiceCollection) : unit =
+    services.AddGiraffe().AddSignalR() |> ignore
 
 [<EntryPoint>]
 let main _ =
@@ -39,4 +41,5 @@ let main _ =
         .ConfigureServices(configureServices)
         .Build()
         .Run()
+
     0 // return an integer exit code
