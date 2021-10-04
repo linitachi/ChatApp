@@ -5,9 +5,6 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.SignalR
 open Microsoft.Extensions.DependencyInjection
-open Giraffe
-
-let endpoints = choose []
 
 type Message = { userName: string; content: string }
 
@@ -24,10 +21,9 @@ let configureApp (app: IApplicationBuilder) =
         .UseStaticFiles()
         .UseRouting()
         .UseEndpoints(fun endpoints -> endpoints.MapHub<MyHub>("/myhub") |> ignore)
-        .UseGiraffe endpoints
+    |> ignore
 
-let configureServices (services: IServiceCollection) : unit =
-    services.AddGiraffe().AddSignalR() |> ignore
+let configureServices (services: IServiceCollection) : unit = services.AddSignalR() |> ignore
 
 [<EntryPoint>]
 let main _ =
