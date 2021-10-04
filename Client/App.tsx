@@ -8,6 +8,7 @@ import { chathistorycontainer, chathistoryscrollpaper, maincontainer } from './A
 export interface IMessage {
     userName: string
     content: string
+    time: string
 }
 
 type TaggedMessage = { id: string } & IMessage
@@ -69,6 +70,10 @@ interface IEvents {
     onMessageChange: (message: string) => void
 }
 
+const getCurrentTime: () => string = () => {
+    return new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })
+}
+
 const app = ({
     userName,
     message,
@@ -84,16 +89,17 @@ const app = ({
         <Grid item xs={12} className={chathistorycontainer}>
             <Paper className={chathistoryscrollpaper}>
                 <List>
-                    {messages.map(({ id, content, userName }) =>
-                        <ListItem key={id}><ListItemText><b>{userName}: </b>{content}</ListItemText></ListItem>)}
+                    {messages.map(({ id, content, userName, time }) =>
+                        <ListItem key={id}><ListItemText><b>{time} {userName}: </b>{content}</ListItemText></ListItem>)}
                     <div ref={el => el && el.scrollIntoView({ behavior: 'smooth' })} />
                 </List>
             </Paper>
         </Grid>
         <Grid item xs={12}>
             <Input placeholder='Message' value={message} onChange={e => onMessageChange(e.target.value)}
-                onKeyUp={e => e.key === 'Enter' && onSendMessage({ userName, content: message })} />
-            <Button onClick={() => onSendMessage({ userName, content: message })}>send</Button>
+                onKeyUp={e => e.key === 'Enter' &&
+                    onSendMessage({ userName, content: message, time: getCurrentTime() })} />
+            <Button onClick={() => onSendMessage({ userName, content: message, time: getCurrentTime() })}>send</Button>
         </Grid>
     </Grid>
 

@@ -6,7 +6,10 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.SignalR
 open Microsoft.Extensions.DependencyInjection
 
-type Message = { userName: string; content: string }
+type Message =
+    { userName: string
+      content: string
+      time: string }
 
 type MyHub() =
     inherit Hub()

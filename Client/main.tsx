@@ -17,7 +17,8 @@ myhub.on('receiveMessage', (message: IMessage) => store.dispatch({ type: APPEND_
 
 const app =
     <Provider store={store}>
-        <App onSendMessage={({ userName, content }) => myhub.invoke('PostMessage', { userName, content })} />
+        <App onSendMessage={({ userName, content, time }) =>
+            myhub.invoke('PostMessage', { userName, content, time })} />
     </Provider>
 
 renderDOM(app, document.getElementById('app'))
