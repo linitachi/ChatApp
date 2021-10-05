@@ -38,10 +38,7 @@ type Action =
     | { type: typeof CHANGE_USERNAME, userName: string }
     | { type: typeof CHANGE_MESSAGE, message: string }
 
-export const reducer = (state: IState | undefined, action: Action): IState => {
-    if (state === undefined)
-        return initialState
-
+export const reducer = (state = initialState, action: Action): IState => {
     switch (action.type) {
         case ESTABLISH_SIGNALR_CONNECTION: return { ...state, signalRConnectionEstablished: true }
         case APPEND_MESSAGE: return {
@@ -50,6 +47,9 @@ export const reducer = (state: IState | undefined, action: Action): IState => {
         }
         case CHANGE_USERNAME: return { ...state, userName: action.userName }
         case CHANGE_MESSAGE: return { ...state, message: action.message }
+        default: {
+            return state
+        }
     }
 }
 
